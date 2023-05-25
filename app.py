@@ -53,12 +53,22 @@ def user_add():
     return jsonify(post_data), 200
 
 
-@app.route('/user/get', methods=['GET'])
+@app.route('/user/get/<user_id>', methods=["GET"])
+def get_user_by_id(user_id):
+    cursor.execute("SELECT user_id, first_name, last_name, email, phone, city, state, org_id, active FROM users WHERE user_id = %s", [user_id])
+    result = cursor.fetchone()
+    if not result:
+        return jsonify("User is not in database"), 400
+
+    return jsonify(result), 200
+
+
+@app.route('/users/get', methods=['GET'])
 def get_all_users():
     cursor.execute("Select first_name, last_name, email, phone, city, state, org_id, active FROM Users")
     results = cursor.fetchall()
     if not results:
-        return jsonify("User is not in DB"), 404
+        return jsonify("No users in DB"), 404
 
     end_result = []
     for result in results:
