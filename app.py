@@ -65,6 +65,7 @@ def get_user_by_id(user_id):
 
 @app.route('/users/get', methods=['GET'])
 def get_all_users():
+
     cursor.execute("Select first_name, last_name, email, phone, city, state, org_id, active FROM Users")
     results = cursor.fetchall()
     if not results:
@@ -87,12 +88,27 @@ def get_all_users():
 
     return jsonify(end_result), 200
 
-# @app.route('/user/activate', methods=['PATCH'])
-# def activate_user():
+
+@app.route('/user/delete/<user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    cursor.execute("DELETE FROM Users WHERE user_id = %s", [user_id])
+    conn.commit()
+    return jsonify("User deleted"), 200
 
 
-# @app._method_route('/user/deactivate', methods=['PATCH'])
-# def dectivate_user():
+@app.route('/user/activate/<user_id>', methods=['PATCH'])
+def activate_user(user_id):
+    cursor.execute("UPDATE FROM Users WHERE active = 0", [user_id])
+    conn.commit()
+    return jsonify("User Active status updated."), 200
+
+
+@app._method_route('/user/deactivate/<user_id>', methods=['PATCH'])
+def dectivate_user(user_id):
+    cursor.execute("UPDATE FROM Users WHERE active = 1", [user_id])
+    conn.commit()
+    return jsonify("User Active status updated."), 200
+
 
 if __name__ == "__main__":
     app.run(port="8086", host="0.0.0.0")
