@@ -98,14 +98,14 @@ def delete_user(user_id):
 
 @app.route('/user/activate/<user_id>', methods=['PATCH'])
 def activate_user(user_id):
-    cursor.execute("UPDATE FROM Users WHERE active = 0", [user_id])
+    cursor.execute("UPDATE Users SET active = 1 WHERE user_id = %s", [user_id])
     conn.commit()
     return jsonify("User Active status updated."), 200
 
 
-@app._method_route('/user/deactivate/<user_id>', methods=['PATCH'])
+@app.route('/user/deactivate/<user_id>', methods=['PATCH'])
 def dectivate_user(user_id):
-    cursor.execute("UPDATE FROM Users WHERE active = 1", [user_id])
+    cursor.execute("UPDATE Users SET active = 0 WHERE user_id = %s", [user_id])
     conn.commit()
     return jsonify("User Active status updated."), 200
 
